@@ -1,0 +1,5 @@
+# Cache gerado pelo Python
+__pycache__/
+
+# Pasta com arquivos de saída do programa
+output/
