@@ -21,44 +21,45 @@ def para_notacao_cientifica(numero, formato_projeto=False):
     return mantissa, expoente
 ###############################################################################################
 
-def aproximacao(numero,n_digitos,metodo):
-    n_digitos = n_digitos + 1
-    #metodo 1: arrendondamento
-    if (metodo == 1):
+def aproximacao(numero, n_digitos, metodo):
+    """
+    Aproxima um número para um número específico de DÍGITOS SIGNIFICATIVOS.
+
+    Args:
+        numero (float): O número a ser aproximado.
+        n_digitos (int): O número de dígitos significativos a ser mantido.
+        metodo (int): 1 para arredondamento clássico, 2 para truncamento.
+    """
+
+    # --- MÉTODO 1: ARREDONDAMENTO CLÁSSICO POR DÍGITOS SIGNIFICATIVOS ---
+    if metodo == 1:
         if numero == 0:
             return 0
-        else:
-            # Usa matemática para encontrar a "ordem de grandeza" do número
-            # math.log10 consegue o expoente ao colocar o numero na base 10
-            # math.floor pega a parte inteira do expoente
-            # Soma mais 1 para...................................................................................................
-            potencia = math.floor(math.log10(abs(numero))) + 1
-            
-            
-            # Calcula o fator para arredondamento
-            fator = 10 ** (n_digitos - potencia)
-            
-            # Arredonda o número escalado e depois desfaz a escala
-            return round(numero * fator) / fator
-    
-
-    #metodo 2: truncamento
-    elif(metodo == 2):
-        if numero == 0:
-            return 0
-        else:
-            # A lógica para encontrar a potência e o fator é a mesma do arredondamento
-            potencia = math.floor(math.log10(abs(numero))) + 1
-
-            fator = 10 ** (n_digitos - potencia)
-            
-            # A MUDANÇA ESTÁ AQUI: usamos math.trunc() em vez de round()
-            # math.trunc() "corta" a parte decimal, efetivamente truncando o número.
-            return math.trunc(numero * fator) / fator
         
-###############################################################################################
+        # Lógica para encontrar o fator de escala para N dígitos significativos
+        potencia = math.floor(math.log10(abs(numero))) + 1
+        fator = 10 ** (n_digitos - potencia)
+        
+        numero_escalado = numero * fator
+        
+        # Lógica de arredondamento "metade para cima"
+        resultado_arredondado = int(numero_escalado + math.copysign(0.5, numero_escalado))
+        
+        return resultado_arredondado / fator
 
-## funções aritimeticas basicas com metodos aproximação
+    # --- MÉTODO 2: TRUNCAMENTO POR DÍGITOS SIGNIFICATIVOS ---
+    elif metodo == 2:
+        if numero == 0:
+            return 0
+
+        # Lógica para encontrar o fator de escala para N dígitos significativos
+        potencia = math.floor(math.log10(abs(numero))) + 1
+        fator = 10 ** (n_digitos - potencia)
+        
+        return math.trunc(numero * fator) / fator
+
+    # Caso o método não seja 1 ou 2
+    return numero
 
 def somarEaproximar(x,y,n_digitos,metodo):
     return aproximacao(x + y,n_digitos,metodo)
@@ -71,7 +72,8 @@ def subtrairEaproximar(x,y,n_digitos,metodo):
 
 
 def dividirEaproximar(x,y,n_digitos,metodo):
-    if y == 0: return float('inf')
+    if y == 0:
+        return float('inf')
     return aproximacao(x / y,n_digitos,metodo)
     # x / y e aproxima pelo metodo escolhido
 
@@ -89,11 +91,12 @@ def erroAbsoluto(exato,aprox):
 
 
 def erroRelativo(exato,aprox):
-    if aprox == 0: return float('inf')
+    if aprox == 0: 
+        return float('inf')
     return abs((exato - aprox)/aprox)
 
 
-def propErroAprox(x,y,n_vezes,n_digitos,metodo,operacao):
+def propErroAprox(x,n_vezes,n_digitos,metodo,operacao):
     #metodos: 1-> arredondamento
     #         2-> truncamento
 
@@ -150,37 +153,37 @@ def CancelamentoSub(x,y,n_digitos,metodo):
     return resultado
     #para saber o valor exato basta diminuir normal (x-y)
     
-# --- Exemplo de Teste (baseado no projeto) ---
-# Problema: Some 0.56786 dez vezes com 4 dígitos por truncamento.
-x_teste = 0.76545
-y_teste = 0.76541
-n_somas = 1
-digitos = 4
-metodo_trunc = 1
-operacao = 2
 
-print(f"valor aproximado arredondado {aproximacao(x_teste,digitos,1)}")
-print(f"valor aproximado truncado {aproximacao(x_teste,digitos,2)}")
-
-#valor_exato = PropErroExato(x_teste,n_somas,operacao)
-#valor_aproximado = propErroAprox(x_teste,y_teste,n_somas, digitos, metodo_trunc,operacao)
-
-valor_exato = x_teste-y_teste
-valor_aproximado = CancelamentoSub(x_teste,y_teste,digitos,metodo_trunc)
-
-#print("---------------------------------------------------------------------------")
-#print(f"Valor Exato: {valor_exato}")
-#print(f"Valor Aproximado (com propagação de erro): {valor_aproximado}")
-#print(f"Erro Absoluto: {erroAbsoluto(valor_exato, valor_aproximado):.6f}")
-#print(f"Erro Relativo: {erroRelativo(valor_exato, valor_aproximado)*100:.4f}%")
-
-mantissa,expoente = para_notacao_cientifica(valor_exato,False)
-print(f"Notação Científica Padrão: {mantissa:.1f} x 10^{expoente}")
+x_teste = 0.56786
+y_teste = 0
+vezes = 10
+ndigitos = 4
+metodo = 1
+op = 1
 
 
+""" 
+TESTE CANCELAMENTO SUB
+print(f"aproximado arredondado: {aproximacao(x_teste,ndigitos,metodo)}")
+print("-"*20)
+valorexato = x_teste - y_teste
+valoraproximado = CancelamentoSub(x_teste,y_teste,ndigitos,metodo)
+erroabsoluto = erroAbsoluto(valorexato,valoraproximado)
+errorelativo = erroRelativo(valorexato,valoraproximado)
+"""
 
 
+""""
+valorexato = PropErroExato(x_teste,vezes,op)
+valoraproximado = propErroAprox(x_teste,vezes,ndigitos,metodo,op)
 
+erroabsoluto = erroAbsoluto(valorexato,valoraproximado)
+errorelativo = erroRelativo(valorexato,valoraproximado)
 
-
-
+print(f"valor exato {valorexato}")
+print(f"valor aproximado{valoraproximado}")
+print(f"comparação de erros EA:{erroabsoluto}")
+print(f"comparação de erros ER:{errorelativo}") 
+mantissa,expoente = para_notacao_cientifica(x_teste,False)
+print(f"Notação Científica Padrão: {mantissa:.1f} x 10^{expoente}") 
+"""
