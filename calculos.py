@@ -23,6 +23,7 @@ def para_notacao_cientifica(numero):
     return mantissa, expoente
 ###############################################################################################
 
+
 def aproximacao(numero, n_digitos, metodo):
     """
     Aproxima um número para um número específico de DÍGITOS SIGNIFICATIVOS.
@@ -30,7 +31,7 @@ def aproximacao(numero, n_digitos, metodo):
     Args:
         numero (float): O número a ser aproximado.
         n_digitos (int): O número de dígitos significativos a ser mantido.
-        metodo (int): 1 para arredondamento clássico, 2 para truncamento.
+        metodo (int): 1 para arredondamento , 2 para truncamento.
     """
 
     # --- MÉTODO 1: ARREDONDAMENTO CLÁSSICO POR DÍGITOS SIGNIFICATIVOS ---
@@ -63,26 +64,28 @@ def aproximacao(numero, n_digitos, metodo):
     # Caso o método não seja 1 ou 2
     return numero
 
-def somarEaproximar(x,y,n_digitos,metodo):
-    return aproximacao(x + y,n_digitos,metodo)
-    # x + y e aproxima pelo metodo escolhido
 
-def subtrairEaproximar(x,y,n_digitos,metodo):
-    return aproximacao(x - y,n_digitos,metodo)
-    # x - y e aproxima pelo metodo escolhido
+def aproximarEsomar(x,y,n_digitos,metodo):
+    return aproximacao(x,n_digitos,metodo) + aproximacao(y,n_digitos,metodo)
+    # aproxima cada pelo metodo escolhido e x + y
 
 
+def aproximarEsubtrair(x,y,n_digitos,metodo):
+    return aproximacao(x,n_digitos,metodo) - aproximacao(y,n_digitos,metodo)
+    # aproxima cada pelo metodo escolhido e x - y 
+    # cancelamento subtrativo
 
-def dividirEaproximar(x,y,n_digitos,metodo):
+
+def aproximarEdividir(x,y,n_digitos,metodo):
     if y == 0:
         return float('inf')
-    return aproximacao(x / y,n_digitos,metodo)
-    # x / y e aproxima pelo metodo escolhido
+    return aproximacao(x,n_digitos,metodo) / aproximacao(y,n_digitos,metodo)
+    # aproxima cada pelo metodo escolhido e x / y 
 
 
-def multiplicarEaproximar(x,y,n_digitos,metodo):
-    return aproximacao(x * y,n_digitos,metodo)
-    # x * y e aproxima pelo metodo escolhido
+def aproximarEmultiplicar(x,y,n_digitos,metodo):
+    return aproximacao(x,n_digitos,metodo) * aproximacao(y,n_digitos,metodo)
+    # aproxima cada pelo metodo escolhido e x * y 
 
 ###############################################################################################
 
@@ -97,63 +100,54 @@ def erroRelativo(exato,aprox):
         return float('inf')
     return abs((exato - aprox)/aprox)
 
+###############################################################################################
 
-def propErroAprox(x,n_vezes,n_digitos,metodo,operacao):
-    #metodos: 1-> arredondamento
-    #         2-> truncamento
+def propErroAproxMult(x, n_vezes, n_digitos, metodo):
+    """
+    Calcula o produto de x por ele mesmo n_vezes (x^n), APROXIMANDO a cada passo.
+    """
+    if n_vezes == 0:
+        return 1
+    if n_vezes == 1:
+        return aproximacao(x, n_digitos, metodo)
 
-    #operacao: 1-> soma
-    #          3-> multiplicação
-    #          4-> divisão
-
+    # Começa com o próprio x
     resultado = x
-    
-
-    for i in range (n_vezes-1):
-        if(operacao == 1):
-            resultado = resultado + x
-
-        elif(operacao == 3):
-            resultado = resultado * x
-
-        elif(operacao == 4):
-            if x == 0:
-                return float('inf') 
-            resultado = resultado / x
-
-        resultado = aproximacao(resultado,n_digitos,metodo)
-        print(f"resultado {resultado}")
-    
+    # O loop roda n_vezes - 1, pois a primeira vez já está no 'resultado'
+    for i in range(n_vezes - 1):
+        resultado = resultado * x
+        resultado = aproximacao(resultado, n_digitos, metodo)
     return resultado
 
-def PropErroExato(x,n_vezes,operacao):
-    #operacao: 1-> soma
-    #          3-> multiplicação
-    #          4-> divisão
-    #obs: a subtração é no cancelamentoSUB
+def propErroAproxSoma(x, n_vezes, n_digitos, metodo):
+    """
+    Calcula a soma de x com ele mesmo n_vezes (n*x), APROXIMANDO a cada passo.
+    """
+    if n_vezes == 0:
+        return 0
+    if n_vezes == 1:
+        return aproximacao(x, n_digitos, metodo)
 
+    # Começa com o próprio x
     resultado = x
-
-    for i in range (n_vezes-1):
-        if(operacao == 1):
-            resultado = resultado + x
-        
-        elif(operacao == 3):
-            resultado = resultado * x
-
-        elif(operacao == 4):
-            if x == 0:
-                return float('inf') 
-            resultado = resultado / x
-
-    
+    # O loop roda n_vezes - 1, pois a primeira vez já está no 'resultado'
+    for i in range(n_vezes - 1):
+        resultado = resultado + x
+        resultado = aproximacao(resultado, n_digitos, metodo)
     return resultado
 
-def CancelamentoSub(x,y,n_digitos,metodo):
-    #valoraproximado
-    resultado = aproximacao(x,n_digitos,metodo) - aproximacao(y,n_digitos,metodo)
-    return resultado
-    #para saber o valor exato basta diminuir normal (x-y)
+def propErroExatoMult(x, n_vezes):
+    """
+    Calcula o produto EXATO de x por ele mesmo n_vezes (x^n_vezes).
+    """
+    return x ** n_vezes
+
+def propErroExatoSoma(x, n_vezes):
+    """
+    Calcula a soma EXATA de x com ele mesmo n_vezes (x * n_vezes).
+    """
+    return x * n_vezes
+
     
 
 x_teste = 0.76545
@@ -161,20 +155,20 @@ y_teste = 0.76541
 vezes = 0
 ndigitos = 4
 metodo = 1
-op = 2
+
 
 
 
 print(f"aproximado arredondado: {aproximacao(x_teste,ndigitos,metodo)}")
 print("-"*20)
+""""""
 valorexato = x_teste - y_teste
-valoraproximado = CancelamentoSub(x_teste,y_teste,ndigitos,metodo)
+valoraproximado = aproximarEsubtrair(x_teste,y_teste,ndigitos,metodo)
 erroabsoluto = erroAbsoluto(valorexato,valoraproximado)
 errorelativo = erroRelativo(valorexato,valoraproximado)
 
 
-
-""""
+"""
 valorexato = PropErroExato(x_teste,vezes,op)
 valoraproximado = propErroAprox(x_teste,vezes,ndigitos,metodo,op)
 
@@ -182,7 +176,7 @@ erroabsoluto = erroAbsoluto(valorexato,valoraproximado)
 errorelativo = erroRelativo(valorexato,valoraproximado)
 """
 
-
+"""
 print(f"valor exato: {valorexato}")
 print(f"valor aproximado: {valoraproximado}")
 print(f"comparação de erros EA: {erroabsoluto}")
@@ -192,3 +186,4 @@ mantissa,expoente = para_notacao_cientifica(valorexato)
 print(f"Notação Científica Padrão valor aprox: {mantissa:.1f} x 10^{expoente}") 
 mantissa,expoente = para_notacao_cientifica(x_teste)
 print(f"Notação Científica Padrão valor aprox: {mantissa:.1f} x 10^{expoente}") 
+"""
