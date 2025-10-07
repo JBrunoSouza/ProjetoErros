@@ -111,7 +111,8 @@ def propagValorExSub(x, n_vezes):
 def propagValorExMult(x, n_vezes):
     
     #Calcula o produto EXATO de x por ele mesmo n_vezes (x^n_vezes).
-    
+    if n_vezes ==0:
+        return 0
     return x ** n_vezes
 
 def propagValorExDiv(x, n_vezes):
@@ -119,12 +120,12 @@ def propagValorExDiv(x, n_vezes):
     #Calcula o resultado EXATO da divisão de x por ele mesmo n_vezes.
     
     if x == 0:
-        if n_vezes <= 1:
+        if n_vezes < 1:
             return 0
         else:
             return float('nan') # Indefinido (0/0)
     if n_vezes == 0:
-        return 1
+        return 0
     # A fórmula é x / x^(n-1)
     return x / (x ** (n_vezes - 1))
 
@@ -147,7 +148,7 @@ def propagValorApSoma(x, n_vezes, n_digitos, metodo):
     for i in range(n_vezes - 1):
         resultado = resultado + x
         resultado = aproximacao(resultado, n_digitos, metodo)
-        print(f"valor aproximado {i}x -> {resultado}")
+
     return resultado
 
 
