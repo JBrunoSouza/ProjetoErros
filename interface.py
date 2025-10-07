@@ -84,7 +84,7 @@ class SimuladorErro(QWidget):
         self.y_input.setStyleSheet("QLineEdit { background-color: white; border: 1px solid #4caf50; border-radius: 6px; padding-left: 8px; }")
         left_layout.addWidget(self.y_input)
 
-        # MUDANÇA AQUI
+       
         left_layout.addWidget(label("Nº de Casas Decimais:"))
         self.casas_input = QLineEdit() # Variável renomeada
         self.casas_input.setPlaceholderText("Ex: 4")
@@ -196,8 +196,7 @@ class SimuladorErro(QWidget):
                 elif self.div_rb.isChecked():
                     valor_exato, valor_aproximado = calculos.propagValorExDiv(x, n_vezes), calculos.propagValorApDiv(x, n_vezes, n_casas, metodo)
 
-            # Dentro da função realizar_calculo, substitua a parte final:
-# ... (código anterior)
+
 
             erro_abs = calculos.erroAbsoluto(valor_exato, valor_aproximado)
             erro_rel = calculos.erroRelativo(valor_exato, valor_aproximado)
@@ -216,13 +215,13 @@ class SimuladorErro(QWidget):
             self.valor_aprox_label.setText(formatar_saida(valor_aproximado))
             self.erro_abs_label.setText(formatar_saida(erro_abs))
             
-            # --- SEÇÃO CORRIGIDA ---
+
             if erro_rel is None or math.isnan(erro_rel): 
                 erro_rel_texto = "Indefinido (NaN)"
             elif math.isinf(erro_rel): 
                 erro_rel_texto = "Infinito %"
             else: 
-                # CORREÇÃO APLICADA AQUI: de ':.f' para ':.4f'
+ 
                 erro_rel_texto = f"{erro_rel * 100:.4f} %"
                 
             self.erro_rel_label.setText(erro_rel_texto)
