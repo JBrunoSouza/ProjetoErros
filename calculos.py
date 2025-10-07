@@ -102,24 +102,15 @@ def erroRelativo(exato,aprox):
 
 ###############################################################################################
 
-def propErroAproxMult(x, n_vezes, n_digitos, metodo):
-    """
-    Calcula o produto de x por ele mesmo n_vezes (x^n), APROXIMANDO a cada passo.
-    """
-    if n_vezes == 0:
-        return 1
-    if n_vezes == 1:
-        return aproximacao(x, n_digitos, metodo)
+# --- SOMA ---
 
-    # Começa com o próprio x
-    resultado = x
-    # O loop roda n_vezes - 1, pois a primeira vez já está no 'resultado'
-    for i in range(n_vezes - 1):
-        resultado = resultado * x
-        resultado = aproximacao(resultado, n_digitos, metodo)
-    return resultado
+def propagValorExSoma(x, n_vezes):
+    """
+    Calcula a soma EXATA de x com ele mesmo n_vezes (x * n_vezes).
+    """
+    return x * n_vezes
 
-def propErroAproxSoma(x, n_vezes, n_digitos, metodo):
+def propagValorApSoma(x, n_vezes, n_digitos, metodo):
     """
     Calcula a soma de x com ele mesmo n_vezes (n*x), APROXIMANDO a cada passo.
     """
@@ -136,17 +127,87 @@ def propErroAproxSoma(x, n_vezes, n_digitos, metodo):
         resultado = aproximacao(resultado, n_digitos, metodo)
     return resultado
 
-def propErroExatoMult(x, n_vezes):
+# --- SUBTRAÇÃO ---
+
+def propagValorExSub(x, n_vezes):
+    """
+    Calcula o resultado EXATO da subtração de x por ele mesmo n_vezes.
+    """
+    if n_vezes == 0: return 0
+    # A fórmula é x - (n-1)*x
+    return x - (x * (n_vezes - 1))
+
+def propagValorApSub(x, n_vezes, n_digitos, metodo):
+    """
+    Calcula a subtração de x por ele mesmo n_vezes, APROXIMANDO a cada passo.
+    Ex: para n=3 -> (x - x)aprox - x
+    """
+    if n_vezes == 0: return 0
+    if n_vezes == 1: return aproximacao(x, n_digitos, metodo)
+
+    # Começa com o próprio x
+    resultado = x
+    # O loop roda n_vezes - 1, pois a primeira vez já está no 'resultado'
+    for i in range(n_vezes - 1):
+        resultado = resultado - x
+        resultado = aproximacao(resultado, n_digitos, metodo)
+    return resultado
+
+# --- MULTIPLICAÇÃO ---
+
+def propagValorExMult(x, n_vezes):
     """
     Calcula o produto EXATO de x por ele mesmo n_vezes (x^n_vezes).
     """
     return x ** n_vezes
 
-def propErroExatoSoma(x, n_vezes):
+def propagValorApMult(x, n_vezes, n_digitos, metodo):
     """
-    Calcula a soma EXATA de x com ele mesmo n_vezes (x * n_vezes).
+    Calcula o produto de x por ele mesmo n_vezes (x^n), APROXIMANDO a cada passo.
     """
-    return x * n_vezes
+    if n_vezes == 0:
+        return 1
+    if n_vezes == 1:
+        return aproximacao(x, n_digitos, metodo)
+
+    # Começa com o próprio x
+    resultado = x
+    # O loop roda n_vezes - 1, pois a primeira vez já está no 'resultado'
+    for i in range(n_vezes - 1):
+        resultado = resultado * x
+        resultado = aproximacao(resultado, n_digitos, metodo)
+    return resultado
+
+# --- DIVISÃO ---
+
+def propagValorExDiv(x, n_vezes):
+    """
+    Calcula o resultado EXATO da divisão de x por ele mesmo n_vezes.
+    """
+    if x == 0:
+        if n_vezes <= 1: return 0
+        else: return float('nan') # Indefinido (0/0)
+    if n_vezes == 0: return 1
+    # A fórmula é x / x^(n-1)
+    return x / (x ** (n_vezes - 1))
+
+def propagValorApDiv(x, n_vezes, n_digitos, metodo):
+    """
+    Calcula a divisão de x por ele mesmo n_vezes, APROXIMANDO a cada passo.
+    Ex: para n=3 -> (x / x)aprox / x
+    """
+    if x == 0 and n_vezes > 1: return float('nan') # Resultado indefinido (0/0)
+    if n_vezes == 0: return 1
+    if n_vezes == 1: return aproximacao(x, n_digitos, metodo)
+
+    # Começa com o próprio x
+    resultado = x
+    # O loop roda n_vezes - 1
+    for i in range(n_vezes - 1):
+        if x == 0: return float('inf') # Divisão por zero
+        resultado = resultado / x
+        resultado = aproximacao(resultado, n_digitos, metodo)
+    return resultado
 
     
 """
