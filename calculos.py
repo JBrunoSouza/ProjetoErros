@@ -149,7 +149,7 @@ def propErroExatoSoma(x, n_vezes):
     return x * n_vezes
 
     
-
+"""
 x_teste = 0.76545
 y_teste = 0.76541
 vezes = 0
@@ -157,8 +157,8 @@ ndigitos = 4
 metodo = 1
 
 
-
-
+"""
+"""
 print(f"aproximado arredondado: {aproximacao(x_teste,ndigitos,metodo)}")
 print("-"*20)
 """"""
@@ -167,7 +167,7 @@ valoraproximado = aproximarEsubtrair(x_teste,y_teste,ndigitos,metodo)
 erroabsoluto = erroAbsoluto(valorexato,valoraproximado)
 errorelativo = erroRelativo(valorexato,valoraproximado)
 
-
+"""
 """
 valorexato = PropErroExato(x_teste,vezes,op)
 valoraproximado = propErroAprox(x_teste,vezes,ndigitos,metodo,op)
