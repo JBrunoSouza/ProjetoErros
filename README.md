@@ -16,14 +16,14 @@ O simulador foi desenvolvido para atender às seguintes especificações:
 -  **Operações Aritméticas:** Suporta as quatro operações básicas: soma, subtração, multiplicação e divisão.
 
 -  **Controle de Precisão:** O usuário pode escolher entre dois métodos para ajustar a precisão do resultado:
-        - **Arredondamento:** Ajusta o resultado para o número de dígitos significativos especificado, seguindo a regra de arredondamento padrão.
-        - **Truncamento:** "Corta" o resultado no número de dígitos significativos especificado, descartando os demais.
+   - **Arredondamento:** Ajusta o resultado para o número de dígitos significativos especificado, seguindo a regra de arredondamento padrão.
+   - **Truncamento:** "Corta" o resultado no número de dígitos significativos especificado, descartando os demais.
    
 -  **Análise de Erros:** Para cada operação, o programa calcula e exibe:
-        - O **valor exato** (calculado com a precisão máxima da linguagem).
-        - O **valor aproximado** (obtido após aplicar o método de ajuste).
-        - O **Erro Absoluto** ($E_a = |Valor_{Exato} - Valor_{Aproximado}|$).
-        - O **Erro Relativo** ($E_r = \frac{|Valor_{Exato} - Valor_{Aproximado}|}{|Valor_{Exato}|}$).
+   - O **valor exato** (calculado com a precisão máxima da linguagem).
+   - O **valor aproximado** (obtido após aplicar o método de ajuste).
+   - O **Erro Absoluto** ($E_a = |Valor_{Exato} - Valor_{Aproximado}|$).
+   - O **Erro Relativo** ($E_r = \frac{|Valor_{Exato} - Valor_{Aproximado}|}{|Valor_{Exato}|}$).
 
 
 ## Tecnologias Utilizadas
@@ -36,11 +36,9 @@ O simulador foi desenvolvido para atender às seguintes especificações:
 
 O código-fonte está organizado nos seguintes arquivos:
 
-- `calculos.py`: Contém as funções matemáticas essenciais, como as operações aritméticas básicas e as lógicas para arredondamento e truncamento de dígitos significativos.
+- `calculos.py`: Contém todas as funções matemáticas, incluindo a conversão para notação científica, ajuste de precisão (arredondamento e truncamento), operações aritméticas e cálculo de erros.
 
-- `programa.py`: Implementa a lógica principal da aplicação, incluindo uma interface inicial via linha de comando para testes.
-
-- `main.py`: Será o ponto de entrada para a interface gráfica desenvolvida com PyQt6.
+- `interface.py`: Implementa a interface gráfica com PyQt6, gerencia a entrada de dados do usuário e exibe os resultados.
     
 - `.gitignore`: Configurado para ignorar arquivos e pastas gerados automaticamente (ex: `__pycache__/`).
     
@@ -75,7 +73,7 @@ Para executar o simulador em seu ambiente local, siga os passos abaixo:
 
 4. **Execute a aplicação:**
 ```
-    python main.py 
+    python interface.py 
 ```
 
     
